@@ -39,5 +39,8 @@ namespace fc {
          static bool          register_appender( const fc::string& type, const appender_factory::ptr& f );
 
          virtual void log( const log_message& m ) = 0;
+
+      protected:
+         static string get_omnibazaar_version();
    };
 }

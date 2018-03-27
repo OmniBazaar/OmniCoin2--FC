@@ -127,6 +127,7 @@ namespace fc
     gelf_message["_thread_name"] = context.get_thread_name();
     if (!context.get_task_name().empty())
       gelf_message["_task_name"] = context.get_task_name();
+    gelf_message["ob_rev"] = get_omnibazaar_version();
 
     string gelf_message_as_string = json::to_string(gelf_message);
     //unsigned uncompressed_size = gelf_message_as_string.size();

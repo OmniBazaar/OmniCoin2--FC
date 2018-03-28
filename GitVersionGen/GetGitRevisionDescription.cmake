@@ -174,3 +174,29 @@ function(git_get_exact_tag _var)
 	git_describe(out --exact-match ${ARGN})
 	set(${_var} "${out}" PARENT_SCOPE)
 endfunction()
+
+function(git_get_rev_count _var)
+    if(NOT GIT_FOUND)
+        find_package(Git QUIET)
+    endif()
+
+    execute_process(COMMAND
+        "${GIT_EXECUTABLE}"
+        "rev-list"
+        "--count"
+        "HEAD"
+        WORKING_DIRECTORY
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        RESULT_VARIABLE
+        res
+        OUTPUT_VARIABLE
+        out
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    if(NOT res EQUAL 0)
+        set(out "0")
+    endif()
+
+    set(${_var} "${out}" PARENT_SCOPE)
+endfunction()

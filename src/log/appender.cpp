@@ -49,13 +49,25 @@ namespace fc {
        // FC lib is both an individual project and a git submodule of OmniCoin2 project, and OC2 depends on FC,
        // so we can't have FC depend on OC2.
        // Thus, already available in OC2 'graphene::utilities::git_revision_sha' variable is not available to FC.
-       // So, in order to propagate revision info from OC2 to FC, OC2 will globally define following preprocessor value,
+       // So, in order to propagate revision info from OC2 to FC, OC2 will globally define following preprocessor values,
        // and if FC is compiled as part of OC2 then it will include following lines of code and print OC2 node version.
-#ifdef OMNIBAZAAR_GIT_REVISION_SHA
-       return string(OMNIBAZAAR_GIT_REVISION_SHA).substr(0, 6);
+
+       static const string version =
+#if defined OMNIBAZAAR_VERSION_MAJOR \
+    && defined OMNIBAZAAR_VERSION_MINOR \
+    && defined OMNIBAZAAR_VERSION_PATCH \
+    && defined OMNIBAZAAR_GIT_REVISION_NUMBER \
+    && defined OMNIBAZAAR_GIT_REVISION_SHA
+        std::to_string(OMNIBAZAAR_VERSION_MAJOR) + "." +
+        std::to_string(OMNIBAZAAR_VERSION_MINOR) + "." +
+        std::to_string(OMNIBAZAAR_VERSION_PATCH) + "." +
+        std::to_string(OMNIBAZAAR_GIT_REVISION_NUMBER) + " " +
+        string(OMNIBAZAAR_GIT_REVISION_SHA).substr(0, 6);
 #else
-       return string();
+        string();
 #endif
+
+       return version;
    }
    
    static bool reg_console_appender = appender::register_appender<console_appender>( "console" );
